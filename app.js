@@ -21,12 +21,13 @@ const io = require('socket.io')(server, {
     }
 })
 
+const messages = []
+
 io.on('connection', socket => {
     const { room } = socket.handshake.query
     if (room) {
         console.log(`Connection established to ${room}`)
 
-        const messages = []
         socket.join(room)
         const userId = uuid.v4()
         socket.on('send_message', message => {
