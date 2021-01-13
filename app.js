@@ -24,12 +24,18 @@ const io = require('socket.io')(server, {
 const messages = []
 
 io.on('connection', socket => {
+    // socket.on('disconnecting', () => {
+    //     console.log(socket.rooms); // the Set contains at least the socket ID
+    //   })
+    console.log(socket.rooms);
     const { room } = socket.handshake.query
     if (room) {
         console.log(`Connection established to ${room}`)
 
         socket.join(room)
         const userId = uuid.v4()
+        io.to(room).emit('show_message', messages)
+
         socket.on('send_message', message => {
             messages.push({
                 user: {
@@ -45,8 +51,8 @@ io.on('connection', socket => {
     }
 })
 
-const users = []
-const connnections = []
+// const users = []
+// const connnections = []
 
 //listen on every connection
 // io.on('connect', (socket) => {
